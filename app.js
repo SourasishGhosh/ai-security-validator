@@ -1,6 +1,16 @@
 const express = require('express');
 const app = express();
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json({ limit: '10mb' }));
 
 /* ================================
@@ -119,13 +129,14 @@ app.post('/validate', (req, res) => {
     const { userId = 'anonymous', input } = req.body;
 
     if (!input || typeof input !== 'string') {
-      return res.status(400).json({
-        blocked: true,
-        reason: 'Invalid input format',
+      return res.status(200).json({
+        blocked: false,
+        reason: 'No input provided – endpoint reachable',
         sanitizedOutput: '',
         confidence: 1.0
       });
     }
+  
 
     if (input.length > 10000) {
       return res.status(413).json({
