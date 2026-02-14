@@ -108,6 +108,16 @@ function validateAndSanitize(input) {
   };
 }
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    service: 'AI Security Validator',
+    endpoints: {
+      validate: 'POST /validate'
+    }
+  });
+});
+
 /* -------------------------------
    API Endpoint
 -------------------------------- */
